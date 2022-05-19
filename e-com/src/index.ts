@@ -25,7 +25,6 @@ const productId = '5f7fa540b2161709fa3d1c3b';
 const baseURLV2 = 'https://ecomplus.io/v2/';
 const baseURLV1 = 'https://api.e-com.plus/v1/'
 
-// https://api.e-com.plus/v1/_authenticate.json // gerete token
 // Create a new router
 const router = Router();
 
@@ -41,7 +40,7 @@ const headerApiV1 = (storeId: string, useToken: boolean) => {
     'Content-type': 'application/json',
     'X-Store-ID': `${storeId}`,
   };
-  if(useToken){
+  if (useToken) {
     header['X-Access-Token'] = `${token['access_token']}`
     header['X-My-ID'] = `${myId}`;
   }
@@ -50,34 +49,33 @@ const headerApiV1 = (storeId: string, useToken: boolean) => {
 
 const getToken = async () => {
   console.log('Request token');
-  let body = {
+  const body = {
     _id: myId,
     api_key: apiKey
   }
-  let url = 'https://api.e-com.plus/v1/_authenticate.json';
-  let requestInfo = { body: JSON.stringify(body) , method: 'POST', headers: headerApiV1(storeId, false) }
-  let getToken = fetch(url , requestInfo);
+  const url = 'https://api.e-com.plus/v1/_authenticate.json';
+  const requestConfig = { body: JSON.stringify(body), method: 'POST', headers: headerApiV1(storeId, false) }
+  const getToken = fetch(url, requestConfig);
   const request = (await getToken).json();
   return await request;
 }
 
 const checkToken = async () => {
-  let now = new Date();
-  let resp = false;
-  if(!token || (now > new Date(token['expires']))){
+  const now = new Date();
+  if (!token || (now > new Date(token['expires']))) {
     token = await getToken();
   }
-  return resp = token && token['expires']? true : false;
+  return (token && token['expires']) ? true : false;
 }
 
 router.get('/__token_v1', async () => {
-  let isToken = await checkToken();
-  return new Response(JSON.stringify({isToken, expires: token['expires']}), opts);
+  const isToken = await checkToken();
+  return new Response(JSON.stringify({ isToken, expires: token['expires'] }), opts);
 });
 
 const request = async (url: string, isV1: boolean, useToken: boolean): Promise<ResultRequest> => {
-  let now = new Date().getTime();
-  let getProduct = fetch(url, { headers: isV1 ? headerApiV1(storeId, useToken) : {} });
+  const now = new Date().getTime();
+  const getProduct = fetch(url, { headers: isV1 ? headerApiV1(storeId, useToken) : {} });
   const request = (await getProduct).json();
   const result = await request;
   const time = (new Date().getTime() - now);
@@ -137,28 +135,28 @@ router.get('/store_v1', () => {
 })
 
 router.get('/storeAll_v1', () => {
-  
+
   const resp = new Promise<Response>(async (resolve) => {
     await checkToken();
     const urlProduct = `${baseURLV1}products/${productId}.json`
     const urlCategories = `${baseURLV1}categories.json`
-    const uriStore = `${baseURLV1}stores/me.json`
+    const urlStore = `${baseURLV1}stores/me.json`
     const now = new Date().getTime();
     const result: Array<ResultRequest> = await Promise.all([
-      request(urlProduct, true,false),
-      request(urlCategories, true,false),
-      request(uriStore, true,true)
+      request(urlProduct, true, false),
+      request(urlCategories, true, false),
+      request(urlStore, true, true)
     ])
     let url: Array<string> = [];
     let response: Array<object> = [];
-    let took: number = (new Date().getTime() - now);
+    const took: number = (new Date().getTime() - now);
     result.forEach(
       (request) => {
         url.push(request.url)
         response.push(request)
       })
 
-    let api: ResultAllPromisse = {
+    const api: ResultAllPromisse = {
       took,
       url,
       response
@@ -173,7 +171,7 @@ router.get('/storeAll_v1', () => {
 router.get('/product_v2', () => {
   const resp = new Promise<Response>(async (resolve) => {
     const uri = `${baseURLV2}:${storeId}/products/${productId}`
-    const api = await request(uri, false,false);
+    const api = await request(uri, false, false);
     resolve(new Response(JSON.stringify(api), opts));
   })
   return resp;
@@ -182,7 +180,7 @@ router.get('/product_v2', () => {
 router.get('/categories_v2', () => {
   const resp = new Promise<Response>(async (resolve) => {
     const uri = `${baseURLV2}:${storeId}/categories`
-    const api = await request(uri, false,false);
+    const api = await request(uri, false, false);
     resolve(new Response(JSON.stringify(api), opts));
   })
   return resp;
@@ -194,19 +192,19 @@ router.get('/storeAll_v2', () => {
     const urlCategories = `${baseURLV2}:${storeId}/categories`
     const now = new Date().getTime();
     const result: Array<ResultRequest> = await Promise.all([
-      request(urlProduct, false,false),
-      request(urlCategories, false,false)
+      request(urlProduct, false, false),
+      request(urlCategories, false, false)
     ])
     let url: Array<string> = [];
     let response: Array<object> = [];
-    let took: number = (new Date().getTime() - now);
+    const took: number = (new Date().getTime() - now);
     result.forEach(
       (request) => {
         url.push(request.url)
         response.push(request)
       })
 
-    let api: ResultAllPromisse = {
+    const api: ResultAllPromisse = {
       took,
       url,
       response

@@ -1,18 +1,23 @@
-# poc-sotreApi 
+# PoC-storeApi 
 
 ## Cloudflare Workers
 This is my first worker.
 
+## Installing the Workers CLI
+
+https://developers.cloudflare.com/workers/
+
+```npm install wrangler```
 
 ## Test local
 
-* - Run `npm run serve` 
-* - Open a browser tab at http://localhost:8787/ to see your worker in action
+- Run `npm run serve` 
+- Open a browser tab at http://localhost:8787/ to see my worker in action
 
 ## Publish Worker
 
-* - Run `npm run publish` to publish my worker
-* - Open a browser tab at https://e-com.wisley.workers.dev/
+- Run `npm run publish` to publish my worker
+- Open a browser tab at https://e-com.wisley.workers.dev/
 
 ## Routes 
 
@@ -28,10 +33,10 @@ This is my first worker.
 ###  Store Api V2
 
 
-* 1) ```/product_v2```
-* 2) ```/categories_v2```
-* 3) ```/store_v2```
-* 4) ```/storeAll_v2```
+1) ```/product_v2```
+2) ```/categories_v2```
+<!-- 3) ```/store_v2``` -->
+<!-- 4) ```/storeAll_v2``` -->
 
 ## Reference 
 * Learn more at https://developers.cloudflare.com/workers/
