@@ -14,8 +14,24 @@ This is my first worker.
 * - Run `npm run publish` to publish my worker
 * - Open a browser tab at https://e-com.wisley.workers.dev/
 
-## routes 
-### 1) 
+## Routes 
+
+
+### Store Api V1
+
+1) ```/product_v1```
+2) ```/categories_v1```
+3) ```/store_v1```
+4) ```/storeAll_v1```
+
+
+###  Store Api V2
+
+
+* 1) ```/product_v2```
+* 2) ```/categories_v2```
+* 3) ```/store_v2```
+* 4) ```/storeAll_v2```
 
 ## Reference 
 * Learn more at https://developers.cloudflare.com/workers/

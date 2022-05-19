@@ -1,12 +1,25 @@
 import { Router } from 'itty-router';
 
 interface Env {
-  var_name: string
+  varName: string
 }
 
-let storeId:string;
-let myId:string;
-let token: string;
+type ResultRequest = {
+  took: number,
+  url: string
+  response: object
+}
+
+type ResultAllPromisse = {
+  took: number,
+  url: Array<string>
+  response: Array<object>
+}
+
+let storeId: string;
+let myId: string;
+let token: object;
+let apiKey: string;
 
 const productId = '5f7fa540b2161709fa3d1c3b';
 const baseURLV2 = 'https://ecomplus.io/v2/';
@@ -23,72 +36,192 @@ const opts = {
 }
 
 
-const headerApiV1 = (storeId: string) => {
-  console.log('> ', storeId);
+const headerApiV1 = (storeId: string, useToken: boolean) => {
   const header = {
     'Content-type': 'application/json',
     'X-Store-ID': `${storeId}`,
   };
-
-  
-  // if(!isToken && token){
-  //   // header['X-My-ID'] = `${myId}`
-  //   header['X-Access-Token'] = `${token}`
-
-  // }
-
+  if(useToken){
+    header['X-Access-Token'] = `${token['access_token']}`
+    header['X-My-ID'] = `${myId}`;
+  }
   return header;
 }
 
+const getToken = async () => {
+  console.log('Request token');
+  let body = {
+    _id: myId,
+    api_key: apiKey
+  }
+  let url = 'https://api.e-com.plus/v1/_authenticate.json';
+  let requestInfo = { body: JSON.stringify(body) , method: 'POST', headers: headerApiV1(storeId, false) }
+  let getToken = fetch(url , requestInfo);
+  const request = (await getToken).json();
+  return await request;
+}
+
+const checkToken = async () => {
+  let now = new Date();
+  let resp = false;
+  if(!token || (now > new Date(token['expires']))){
+    token = await getToken();
+  }
+  return resp = token && token['expires']? true : false;
+}
+
+router.get('/__token_v1', async () => {
+  let isToken = await checkToken();
+  return new Response(JSON.stringify({isToken, expires: token['expires']}), opts);
+});
+
+const request = async (url: string, isV1: boolean, useToken: boolean): Promise<ResultRequest> => {
+  let now = new Date().getTime();
+  let getProduct = fetch(url, { headers: isV1 ? headerApiV1(storeId, useToken) : {} });
+  const request = (await getProduct).json();
+  const result = await request;
+  const time = (new Date().getTime() - now);
+  return {
+    took: time,
+    url: url,
+    response: { ...result }
+  }
+}
+
+router.get('/favicon.ico', () => {
+  return new Response();
+})
+
 router.get('/', () => {
-  const resources = ['/product_v1', '/product_v2'];
-  return new Response(JSON.stringify({ resources }), opts)
+  const resources = [
+    '/product_v1',
+    '/categories_v1',
+    '/store_v1',
+    '/storeAll_v1',
+    '/product_v2',
+    '/categories_v2',
+    '/store_v2',
+    '/storeAll_v2',
+  ];
+  return new Response(JSON.stringify({ resources }), opts);
 });
 
 
-router.get('/product_v1', async () => {
+// Store Api V1
+router.get('/product_v1', () => {
+  const resp = new Promise<Response>(async (resolve) => {
+    const uri = `${baseURLV1}products/${productId}.json`
+    const api = await request(uri, true, false);
+    resolve(new Response(JSON.stringify(api), opts));
+  })
+  return resp;
+})
+
+router.get('/categories_v1', () => {
+  const resp = new Promise<Response>(async (resolve) => {
+    const uri = `${baseURLV1}categories.json`
+    const api = await request(uri, true, false);
+    resolve(new Response(JSON.stringify(api), opts));
+  })
+  return resp;
+})
+
+router.get('/store_v1', () => {
+  const resp = new Promise<Response>(async (resolve) => {
+    await checkToken();
+    const uri = `${baseURLV1}stores/me.json`
+    const api = await request(uri, true, true);
+    resolve(new Response(JSON.stringify(api), opts));
+  })
+  return resp;
+})
+
+router.get('/storeAll_v1', () => {
   
-  const urlV1 = `${baseURLV1}products/${productId}.json`
   const resp = new Promise<Response>(async (resolve) => {
-    // request V1
-    let nowV1 = new Date().getTime();
-    let getProductV1 = fetch(urlV1, { headers: headerApiV1(storeId) });
-    const requestV1 = (await getProductV1).json();
-    const dataV1 = await requestV1;
-    const timeV1 = (new Date().getTime() - nowV1);
-    const apiV1 = {
-      took: timeV1,
-      url: urlV1,
-      response: { ...dataV1 }
+    await checkToken();
+    const urlProduct = `${baseURLV1}products/${productId}.json`
+    const urlCategories = `${baseURLV1}categories.json`
+    const uriStore = `${baseURLV1}stores/me.json`
+    const now = new Date().getTime();
+    const result: Array<ResultRequest> = await Promise.all([
+      request(urlProduct, true,false),
+      request(urlCategories, true,false),
+      request(uriStore, true,true)
+    ])
+    let url: Array<string> = [];
+    let response: Array<object> = [];
+    let took: number = (new Date().getTime() - now);
+    result.forEach(
+      (request) => {
+        url.push(request.url)
+        response.push(request)
+      })
+
+    let api: ResultAllPromisse = {
+      took,
+      url,
+      response
     }
-    resolve(new Response(JSON.stringify(apiV1), opts));
+    resolve(new Response(JSON.stringify(api), opts));
   })
   return resp;
 })
 
+
+// Store Api V2
 router.get('/product_v2', () => {
-  console.log('> store', storeId, ' ', productId);
-  const urlV2 = `${baseURLV2}:${storeId}/products/${productId}`;
   const resp = new Promise<Response>(async (resolve) => {
-    let nowV2 = new Date().getTime();
-    let getProductV2 = fetch(urlV2);
-    const requestV2 = (await getProductV2).json();
-    const dataV2 = await requestV2;
-    const timeV2 = (new Date().getTime() - nowV2);
-    const apiV2 = {
-      took: timeV2,
-      url: urlV2,
-      response: { ...dataV2 }
-    }
-    resolve(new Response(JSON.stringify(apiV2), opts));
+    const uri = `${baseURLV2}:${storeId}/products/${productId}`
+    const api = await request(uri, false,false);
+    resolve(new Response(JSON.stringify(api), opts));
   })
   return resp;
 })
 
+router.get('/categories_v2', () => {
+  const resp = new Promise<Response>(async (resolve) => {
+    const uri = `${baseURLV2}:${storeId}/categories`
+    const api = await request(uri, false,false);
+    resolve(new Response(JSON.stringify(api), opts));
+  })
+  return resp;
+})
+
+router.get('/storeAll_v2', () => {
+  const resp = new Promise<Response>(async (resolve) => {
+    const urlProduct = `${baseURLV2}:${storeId}/products/${productId}`
+    const urlCategories = `${baseURLV2}:${storeId}/categories`
+    const now = new Date().getTime();
+    const result: Array<ResultRequest> = await Promise.all([
+      request(urlProduct, false,false),
+      request(urlCategories, false,false)
+    ])
+    let url: Array<string> = [];
+    let response: Array<object> = [];
+    let took: number = (new Date().getTime() - now);
+    result.forEach(
+      (request) => {
+        url.push(request.url)
+        response.push(request)
+      })
+
+    let api: ResultAllPromisse = {
+      took,
+      url,
+      response
+    }
+    resolve(new Response(JSON.stringify(api), opts));
+  })
+  return resp;
+})
 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     storeId = env['STOREID'];
+    apiKey = env['APIKEYV1'];
+    myId = env['MYID'];
+
     return router.handle(request);
   },
 };
