@@ -214,6 +214,8 @@ router.get('/storeAll_v2', () => {
   return resp;
 })
 
+router.all("*", () => new Response("404, not found!", { status: 404 }))
+
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     storeId = env['STOREID'];

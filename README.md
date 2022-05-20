@@ -19,6 +19,9 @@ https://developers.cloudflare.com/workers/
 - Run `npm run publish` to publish my worker
 - Open a browser tab at https://e-com.wisley.workers.dev/
 
+
+## Logs
+
 ## Routes 
 
 
