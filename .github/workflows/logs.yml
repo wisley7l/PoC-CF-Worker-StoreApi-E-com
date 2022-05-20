@@ -21,5 +21,4 @@ jobs:
         cache: 'npm'
     
     - name: Install and init logs
-      run: npm i
-      run: npm run logs
+      run: npm i | npm run logs
