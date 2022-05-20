@@ -50,3 +50,4 @@ https://developers.cloudflare.com/workers/
 
 * https://egghead.io/lessons/cloudflare-make-api-requests-in-a-workers-function-using-the-fetch-api
 
+* https://github.com/cloudflare/wrangler-action

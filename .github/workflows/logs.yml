@@ -31,6 +31,6 @@ jobs:
 
     - name: Init Logs
       uses: cloudflare/wrangler-action@2.0.0
-        with:
-          apiToken: ${{ secrets.cloudflare_api_key }}
-          command: tail e-com
+      with:
+        apiToken: ${{ secrets.cloudflare_api_key }}
+        command: tail e-com
