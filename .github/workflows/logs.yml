@@ -25,9 +25,9 @@ jobs:
 
     - name: List files
       run: ls 
-      
+
     - name: Install wrangler logs
       run: npm install -g wrangler
 
     - name: Init Logs
-      run: wrangler tail e-com
+      run: CLOUDFLARE_ACCOUNT_ID=${{ secrets.cloudflare_account }} CLOUDFLARE_API_TOKEN=${{ secrets.cloudflare_api_key }} wrangler tail e-com
