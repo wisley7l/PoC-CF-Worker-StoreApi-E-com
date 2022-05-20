@@ -38,8 +38,8 @@ https://developers.cloudflare.com/workers/
 
 1) ```/product_v2```
 2) ```/categories_v2```
-<!-- 3) ```/store_v2``` -->
-<!-- 4) ```/storeAll_v2``` -->
+3) ```/store_v2``` -->
+4) ```/storeAll_v2```
 
 ## Reference 
 * Learn more at https://developers.cloudflare.com/workers/
