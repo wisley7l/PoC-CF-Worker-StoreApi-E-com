@@ -33,4 +33,5 @@ jobs:
       uses: cloudflare/wrangler-action@2.0.0
       with:
         apiToken: ${{ secrets.cloudflare_api_key }}
+        accountId: ${{ secrets.CLOUDFLARE_ACCOUNT }}
         command: tail e-com
