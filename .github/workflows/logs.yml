@@ -30,4 +30,7 @@ jobs:
       run: npm install -g wrangler
 
     - name: Init Logs
-      run: CLOUDFLARE_ACCOUNT_ID=${{ secrets.cloudflare_account }} CLOUDFLARE_API_TOKEN=${{ secrets.cloudflare_api_key }} wrangler tail e-com
+      uses: cloudflare/wrangler-action@2.0.0
+        with:
+          apiToken: ${{ secrets.cloudflare_api_key }}
+          command: tail e-com

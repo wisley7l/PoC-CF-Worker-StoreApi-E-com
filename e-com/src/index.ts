@@ -186,14 +186,25 @@ router.get('/categories_v2', () => {
   return resp;
 })
 
+router.get('/store_v2', () => {
+  const resp = new Promise<Response>(async (resolve) => {
+    const uri = `${baseURLV2}:${storeId}/stores/me`
+    const api = await request(uri, false, false);
+    resolve(new Response(JSON.stringify(api), opts));
+  })
+  return resp;
+})
+
 router.get('/storeAll_v2', () => {
   const resp = new Promise<Response>(async (resolve) => {
     const urlProduct = `${baseURLV2}:${storeId}/products/${productId}`
     const urlCategories = `${baseURLV2}:${storeId}/categories`
+    const urlStore = `${baseURLV2}:${storeId}/stores/me`
     const now = new Date().getTime();
     const result: Array<ResultRequest> = await Promise.all([
       request(urlProduct, false, false),
-      request(urlCategories, false, false)
+      request(urlCategories, false, false),
+      request(urlStore, false, false)
     ])
     let url: Array<string> = [];
     let response: Array<object> = [];
