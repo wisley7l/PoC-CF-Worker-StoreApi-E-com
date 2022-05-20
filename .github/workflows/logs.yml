@@ -20,5 +20,14 @@ jobs:
         node-version: '16'
         cache: 'npm'
     
-    - name: Install and init logs
-      run: npm i | npm run logs
+    - name: Install dependencies
+      run: npm i
+
+    - name: List files
+      run: ls 
+      
+    - name: Install wrangler logs
+      run: npm install -g wrangler
+
+    - name: Init Logs
+      run: wrangler tail e-com
