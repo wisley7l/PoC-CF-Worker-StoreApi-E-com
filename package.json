@@ -8,7 +8,7 @@
     "wrangler": "^2.0.5"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^3.10.0",
+    "@cloudflare/workers-types": "^3.11.0",
     "@types/node": "^17.0.34",
     "eslint": "^8.15.0",
     "ts-node-dev": "^1.1.8",
@@ -16,9 +16,11 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "serve": "node node_modules/wrangler/bin/wrangler.js dev e-com/src/index.ts",
-    "publish": "node node_modules/wrangler/bin/wrangler.js publish e-com/src/index.ts --name e-com",
-    "logs": "node node_modules/wrangler/bin/wrangler.js tail e-com"
+    "e-com": "node node_modules/wrangler/bin/wrangler.js dev e-com/src/index.ts",
+    "cms": "node node_modules/wrangler/bin/wrangler.js dev e-com-cms/src/index.ts",
+    "publish:e-com": "node node_modules/wrangler/bin/wrangler.js publish e-com/src/index.ts --name e-com",
+    "publish:cms": "node node_modules/wrangler/bin/wrangler.js publish e-com-cms/src/index.ts --name e-com-cms",
+    "logs:e-com": "node node_modules/wrangler/bin/wrangler.js tail e-com"
   },
   "repository": {
     "type": "git",

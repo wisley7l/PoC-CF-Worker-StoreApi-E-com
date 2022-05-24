@@ -1,4 +1,5 @@
 .env
 node_modules
-e-com/wrangler.toml
+*/wrangler.toml
 test.*
+pages/
