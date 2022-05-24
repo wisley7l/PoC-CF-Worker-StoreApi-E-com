@@ -71,7 +71,7 @@ export default {
     let req:string = 'url';
     let page: string | null;
     let response: ResponseR2;
-    //*
+
     if (resource === 'r2') {
       let now = new Date().getTime()
       response = await getR2(`${file}.html`, env);
@@ -84,13 +84,7 @@ export default {
       took = new Date().getTime() - now;
       page = response.page;
     }
-    let header = {
-      took,
-      page,
-      req,
-      file
-    }
-    // */
+
     const headers = new Headers()
     headers.set('took', `${response.took}`)
     headers.set('Content-Type', 'text/html; charset=utf-8')
