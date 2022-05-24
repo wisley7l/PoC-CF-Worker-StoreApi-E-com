@@ -17,9 +17,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "e-com": "node node_modules/wrangler/bin/wrangler.js dev e-com/src/index.ts",
-    "cms": "node node_modules/wrangler/bin/wrangler.js dev e-com-cms/src/index.ts",
+    "r2": "node node_modules/wrangler/bin/wrangler.js dev r2/src/index.ts",
     "publish:e-com": "node node_modules/wrangler/bin/wrangler.js publish e-com/src/index.ts --name e-com",
-    "publish:cms": "node node_modules/wrangler/bin/wrangler.js publish e-com-cms/src/index.ts --name e-com-cms",
+    "publish:r2": "node node_modules/wrangler/bin/wrangler.js publish r2/src/index.ts --name r2",
     "logs:e-com": "node node_modules/wrangler/bin/wrangler.js tail e-com"
   },
   "repository": {
