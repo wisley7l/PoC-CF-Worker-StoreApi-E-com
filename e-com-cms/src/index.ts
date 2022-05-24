@@ -10,20 +10,6 @@ type ResponseR2 = {
   page: string | null
 }
 
-let optsHtml = {
-  headers: {
-    'Content-Type': 'text/html; charset=utf-8'
-    // 'Content-type': 'application/json',
-  },
-}
-
-let optsJson = {
-  headers: {
-    // 'Content-Type': 'text/html; charset=utf-8'
-    'Content-type': 'application/json',
-  },
-}
-
 const getR2 = async (file: string, env: Env): Promise<ResponseR2> => {
   console.log('get R2: ', file)
   const now = new Date().getTime();
@@ -74,7 +60,7 @@ export default {
 
     if (resource === 'r2') {
       let now = new Date().getTime()
-      response = await getR2(`${file}.html`, env);
+      response = await getR2(`${file}`, env);
       took = new Date().getTime() - now;
       page = response.page;
       req = 'r2'
