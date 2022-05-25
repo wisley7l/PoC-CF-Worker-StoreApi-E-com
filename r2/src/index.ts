@@ -2,12 +2,14 @@
 
 interface Env {
   varName: string,
-  BUCKET: R2Bucket
+  BUCKET: R2Bucket,
+  GCLOUD_STORAGE_BUCKET: string,
 }
 
 type ResponseR2 = {
   took: number | null
   page: string | null
+  size: number | null
 }
 
 const getR2 = async (file: string, env: Env): Promise<ResponseR2> => {
@@ -19,29 +21,62 @@ const getR2 = async (file: string, env: Env): Promise<ResponseR2> => {
     let response = {
       took: (new Date().getTime() - now),
       page: result,
+      size: result.length
     }
     return response
   }
   return {
     took: null,
-    page: null
+    page: null,
+    size: null
   }
 
 }
 
 const getUrl = async (file: string): Promise<ResponseR2> => {
   console.log('request URL: ', file)
-  const url = `https://${file}.netlify.app`
+  const url = `https://${file.replace('.html', '')}.com.br/index.html`
   const now = new Date().getTime();
   const getUrl = fetch(url)
   const request = (await getUrl).text();
   const result = await request;
   let response = {
     took: (new Date().getTime() - now),
-    page: result
+    page: result,
+    size: result.length
   }
   return response;
+}
 
+const getGcs = async (file: string): Promise<ResponseR2> => {
+  console.log('request URL: ', file)
+  const url = `https://storage.googleapis.com/storefront-sp/${file}`
+  const now = new Date().getTime();
+  const getUrl = fetch(url)
+  const request = (await getUrl).text();
+  const result = await request;
+  let response = {
+    took: (new Date().getTime() - now),
+    page: result,
+    size: result.length
+  }
+  return response;
+}
+
+const getGcsUs = async (file: string): Promise<ResponseR2> => {
+  console.log('request URL: ', file)
+  // https://storage.googleapis.com/storefront-sp/emporiotiasonia.html
+  const url = `https://storage.googleapis.com/storefront-us/${file}`
+  const now = new Date().getTime();
+  const getUrl = fetch(url)
+  const request = (await getUrl).text();
+  const result = await request;
+  let response = {
+    took: (new Date().getTime() - now),
+    page: result,
+    size: result.length
+  }
+  return response;
 }
 
 export default {
@@ -54,7 +89,7 @@ export default {
 
 
     let took: number | null;
-    let req:string = 'url';
+    let req: string = 'url';
     let page: string | null;
     let response: ResponseR2;
 
@@ -64,6 +99,16 @@ export default {
       took = new Date().getTime() - now;
       page = response.page;
       req = 'r2'
+    } else if (resource === 'gcs-sp') {
+      let now = new Date().getTime()
+      response = await getGcs(file);
+      took = new Date().getTime() - now;
+      page = response.page;
+    } else if (resource === 'gcs-us') {
+      let now = new Date().getTime()
+      response = await getGcsUs(file);
+      took = new Date().getTime() - now;
+      page = response.page;
     } else {
       let now = new Date().getTime()
       response = await getUrl(file);
@@ -74,6 +119,7 @@ export default {
     const headers = new Headers()
     headers.set('took', `${response.took}`)
     headers.set('Content-Type', 'text/html; charset=utf-8')
+    // headers.set('Content-Type', 'application/json')
     return new Response(response.page, {
       headers,
     })
