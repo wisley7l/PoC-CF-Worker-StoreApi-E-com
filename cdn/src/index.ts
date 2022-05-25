@@ -92,7 +92,7 @@ export default {
     let response: ResponseR2;
 
     let now = new Date().getTime()
-    response = await getR2(file,env);
+    response = await getUrl(file);
     took = new Date().getTime() - now;
     page = response.page;
 

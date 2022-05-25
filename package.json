@@ -18,8 +18,12 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "e-com": "node node_modules/wrangler/bin/wrangler.js dev e-com/src/index.ts",
     "r2": "node node_modules/wrangler/bin/wrangler.js dev r2/src/index.ts",
+    "performace": "node node_modules/wrangler/bin/wrangler.js dev performece-graphic/src/index.ts",
     "publish:e-com": "node node_modules/wrangler/bin/wrangler.js publish e-com/src/index.ts --name e-com",
     "publish:r2": "node node_modules/wrangler/bin/wrangler.js publish r2/src/index.ts --name r2",
+    "publish:gcs-sp": "node node_modules/wrangler/bin/wrangler.js publish gcs-sp/src/index.ts --name gcs-sp",
+    "publish:gcs-us": "node node_modules/wrangler/bin/wrangler.js publish gcs-us/src/index.ts --name gcs-us",
+    "publish:cdn": "node node_modules/wrangler/bin/wrangler.js publish cdn/src/index.ts --name cdn",
     "logs:e-com": "node node_modules/wrangler/bin/wrangler.js tail e-com"
   },
   "repository": {
