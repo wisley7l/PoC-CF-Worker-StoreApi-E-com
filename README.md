@@ -8,4 +8,7 @@
 * e-com
 
 ## PoC worker with R2
-* e-com-cms
+* cdn
+* r2
+* gcs-sp
+* gcs-us
