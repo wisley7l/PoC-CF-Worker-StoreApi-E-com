@@ -1,0 +1,8 @@
+name = "e-com-cms"
+main = "src/index.ts"
+compatibility_date = "2022-05-23"
+
+[[r2_buckets]]
+binding = 'BUCKET' # <~ valid JavaScript variable name
+bucket_name = '' # r2 prodution
+preview_bucket_name = '' # r2 dev

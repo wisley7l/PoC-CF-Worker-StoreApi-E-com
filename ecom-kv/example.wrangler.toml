@@ -1,0 +1,7 @@
+name = "ecom-kv"
+main = "src/index.ts"
+compatibility_date = "2022-06-06"
+
+kv_namespaces = [
+  { binding = "TODO", id = "06779da6940b431db6e566b4846d64db" }
+]

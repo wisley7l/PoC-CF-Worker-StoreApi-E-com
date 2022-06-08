@@ -33,52 +33,6 @@ const getR2 = async (file: string, env: Env): Promise<ResponseR2> => {
 
 }
 
-const getUrl = async (file: string): Promise<ResponseR2> => {
-  console.log('request URL: ', file)
-  const url = `https://${file.replace('.html', '')}.com.br/index.html`
-  const now = new Date().getTime();
-  const getUrl = fetch(url)
-  const request = (await getUrl).text();
-  const result = await request;
-  let response = {
-    took: (new Date().getTime() - now),
-    page: result,
-    size: result.length
-  }
-  return response;
-}
-
-const getGcs = async (file: string): Promise<ResponseR2> => {
-  console.log('request URL: ', file)
-  const url = `https://storage.googleapis.com/storefront-sp/${file}`
-  const now = new Date().getTime();
-  const getUrl = fetch(url)
-  const request = (await getUrl).text();
-  const result = await request;
-  let response = {
-    took: (new Date().getTime() - now),
-    page: result,
-    size: result.length
-  }
-  return response;
-}
-
-const getGcsUs = async (file: string): Promise<ResponseR2> => {
-  console.log('request URL: ', file)
-  // https://storage.googleapis.com/storefront-sp/emporiotiasonia.html
-  const url = `https://storage.googleapis.com/storefront-us/${file}`
-  const now = new Date().getTime();
-  const getUrl = fetch(url)
-  const request = (await getUrl).text();
-  const result = await request;
-  let response = {
-    took: (new Date().getTime() - now),
-    page: result,
-    size: result.length
-  }
-  return response;
-}
-
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url)
